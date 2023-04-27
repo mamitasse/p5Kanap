@@ -1,12 +1,14 @@
 // Récupérer la valeur de l'ID du produit à partir des paramètres de l'URL
 let url = window.location.href;
 let productId = url.split(`?`)[1];
+
+ // Récupérer les produits déjà ajoutés au panier depuis localStorage
+ let cart = JSON.parse(localStorage.getItem("cart")) || [];
 fetch(`http://localhost:3000/api/products/` + productId)
   .then(function (response) {
     return response.json();
   })
   .then((product) => {
-    console.log(product);
     document.getElementById("title").textContent = product.name;
     document.getElementById("description").textContent = product.description;
     document.querySelector(
@@ -16,15 +18,7 @@ fetch(`http://localhost:3000/api/products/` + productId)
 
     // Récupérer l'élément HTML pour afficher les couleurs
     let colorsElement = document.getElementById("colors");
-
-    // Récupérer les données des couleurs du produit
-    product = {
-      colors: product.colors,
-      name: product.name,
-      price: product.price,
-      id: product.id,
-    };
-
+    
     // Mettre à jour le contenu de l'élément HTML avec les couleurs du produit
     colorsElement.textContent = product.colors;
 
@@ -35,16 +29,7 @@ fetch(`http://localhost:3000/api/products/` + productId)
       optionElement.textContent = product.colors[i];
       colorsElement.appendChild(optionElement);
     }
-    // Ajouter un gestionnaire d'événements pour le menu déroulant
-    colorsElement.addEventListener("change", function (event) {
-      // Récupérer la couleur sélectionnée
-      let selectedColor = event.target.value;
-
-      // Mettre à jour le contenu de l'élément HTML avec la couleur sélectionnée
-      product.selectedColor = selectedColor;
-      productColors = selectedColor;
-      console.log(productColors);
-    });
+   
     // Récupérer l'élément HTML pour la quantité et le bouton d'ajout au panier
     let quantityElement = document.getElementById("quantity");
     let addToCartButton = document.getElementById("addToCart");
@@ -53,6 +38,7 @@ fetch(`http://localhost:3000/api/products/` + productId)
     addToCartButton.addEventListener("click", function () {
       // Récupérer la quantité saisie par l'utilisateur
       let quantity = parseInt(quantityElement.value);
+      let productColors = document.getElementById('colors').value
 
       // Vérifier si la quantité est un nombre valide
       if (isNaN(quantity) || quantity <= 0 || quantity > 100) {
@@ -65,29 +51,17 @@ fetch(`http://localhost:3000/api/products/` + productId)
    
         product: product,
         quantity: quantity,
-        color:productColors
+        color:productColors,
+        img:product.imageUrl,
+        price:product.price,
+        id:product._id
+
       };
+
+      cart.push(productToAddToCart)
+      console.log(cart)
+      localStorage.setItem('cart', JSON.stringify(cart));
       console.log(productToAddToCart);
-      console.log(quantity);
+
     });
-    // Récupérer l'élément HTML pour afficher les couleurs
-    let nameElement = document.getElementById("title");
-    let priceElement = document.getElementById("price");
-
-    product = {
-      id: productId,
-      name: product.name,
-      color: product.color,
-      price: product.price,
-      quantity: quantity,
-    };
-    console.log(product);
-    // Récupérer les produits déjà ajoutés au panier depuis localStorage
-    let cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
-
-    // Ajouter le produit sélectionné à la liste des produits du panier
-    cartItems.push(product);
-    console.log(cartItems);
-    
   });
- 

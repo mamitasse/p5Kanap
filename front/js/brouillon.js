@@ -57,9 +57,16 @@ const createArticle = () => {
       `;
       section.appendChild(article);
 
-
+      console.log(element);
+      console.log(element.product._id);
+      console.log(element.color);
+      console.log(element.product.name);
+      console.log(element.product.price);
+      console.log(element.quantity);
+      console.log(element.img);
+      console.log(element.product.altTxt);
     });
   }
 };
 
-createArticle(); // Appel de la fonction pour afficher les articles du panier da
+createArticle(); // Appel de la fonction pour afficher les articles du panier 

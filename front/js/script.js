@@ -11,7 +11,8 @@ fetch("http://localhost:3000/api/products")
     let article = document.createElement("article")
     let img =document.createElement("img")
     let alt =document.createElement("alt")
-    let title = document.createElement("h3")
+    let title = document.createElement("h2")
+    let color=document.createElement("p")
     let description = document.createElement("p")
 
     //insertion des parametres produitsdans les fiches
