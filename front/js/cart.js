@@ -34,8 +34,7 @@ const createArticle = () => {
       article.classList.add("cart__item");
       article.setAttribute("data-id", element.product._id);
       article.setAttribute("data-color", element.color);
-      article.innerHTML = `
-        <div class="cart__item__img">
+      article.innerHTML=`<article class="cart__item" data-id="${element.product._id}" data-color="${element.color}"><div class="cart__item__img">
           <img src="${element.img}" alt="${element.product.altTxt}">
         </div>
         <div class="cart__item__content">
@@ -54,10 +53,18 @@ const createArticle = () => {
             </div>
           </div>
         </div>
+        </article>
       `;
       section.appendChild(article);
 
-
+      console.log(element);
+      console.log(element.product._id);
+      console.log(element.color);
+      console.log(element.product.name);
+      console.log(element.product.price);
+      console.log(element.quantity);
+      console.log(element.img);
+      console.log(element.product.altTxt);
     });
   }
 };
