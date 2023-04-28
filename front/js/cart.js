@@ -11,7 +11,16 @@ const getCart = () => {
     return JSON.parse(cart);
   }
 };
-
+const addToCart = (product, color) => {
+  let cart = getCart();
+  let key = `${product._id}_${color}`;
+  if (key in cart) {
+    cart[key]++;
+  } else {
+    cart[key] = 1;
+  }
+  localStorage.setItem("cart", JSON.stringify(cart));
+};
 const section = document.getElementById("cart__items");
 const price = document.getElementById("totalPrice");
 const quantity = document.getElementById("totalQuantity");
@@ -56,6 +65,8 @@ const createArticle = () => {
         </article>
       `;
       section.appendChild(article);
+      sumPrices += element.product.price * element.quantity;
+      sumQuantity += element.quantity;
 
       console.log(element);
       console.log(element.product._id);
@@ -67,6 +78,8 @@ const createArticle = () => {
       console.log(element.product.altTxt);
     });
   }
+  price.innerText = sumPrices.toFixed(2);
+  quantity.innerText = sumQuantity;
 };
 
 createArticle(); // Appel de la fonction pour afficher les articles du panier da
