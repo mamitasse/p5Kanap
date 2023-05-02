@@ -1,7 +1,3 @@
-/**
- * Récupère le panier du localStorage
- * @returns array
- */
 const getCart = () => {
   let cart = localStorage.getItem("cart");
   //Si il n'y a rien dans le panier, on retourne un tableau vide
@@ -12,61 +8,53 @@ const getCart = () => {
   }
 };
 
-const section = document.getElementById("cart__items");
-const price = document.getElementById("totalPrice");
-const quantity = document.getElementById("totalQuantity");
-
-// Afficher chaque article du panier dans le DOM
-const createArticle = () => {
-  console.log(section.children);
-  let sumPrices = 0;
-  let sumQuantity = 0;
-  // Eviter les doublons
-  while (section.children.length > 0) {
-    section.removeChild(section.childNodes[0]);
-  }
-  const localStorageProduct = getCart();
-  if (localStorageProduct.length == 0) {
-    section.innerText = "Votre panier est vide";
-  } else {
-    localStorageProduct.forEach(element => {
-      let article = document.createElement("article");
-      article.classList.add("cart__item");
-      article.setAttribute("data-id", element.product._id);
-      article.setAttribute("data-color", element.color);
-      article.innerHTML = `
-        <div class="cart__item__img">
-          <img src="${element.img}" alt="${element.product.altTxt}">
-        </div>
-        <div class="cart__item__content">
-          <div class="cart__item__content__description">
-            <h2>${element.product.name}</h2>
-            <p>${element.color}</p>
-            <p>${element.product.price}</p>
-          </div>
-          <div class="cart__item__content__settings">
-            <div class="cart__item__content__settings__quantity">
-              <p>Qté :${element.quantity} </p>
-              <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="42">
-            </div>
-            <div class="cart__item__content__settings__delete">
-              <p class="deleteItem">Supprimer</p>
-            </div>
-          </div>
-        </div>
-      `;
-      section.appendChild(article);
-
-      console.log(element);
-      console.log(element.product._id);
-      console.log(element.color);
-      console.log(element.product.name);
-      console.log(element.product.price);
-      console.log(element.quantity);
-      console.log(element.img);
-      console.log(element.product.altTxt);
-    });
-  }
-};
-
-createArticle(); // Appel de la fonction pour afficher les articles du panier 
+function lignePanier (id, qte, prix)
+{
+    this.codeArticle = id;
+    this.qteArticle = qte;
+    this.prixArticle = prix;
+    this.ajouterQte = function(qte)
+    {
+        this.qteArticle += qte;
+    }
+    this.getPrixLigne = function()
+    {
+        var resultat = this.prixArticle * this.qteArticle;
+        return resultat;
+    }
+    this.getCode = function() 
+    {
+        return this.codeArticle;
+    }
+} 
+lignePanier();
+//Sélectionnez
+function Panier()
+{
+    this.liste = [];
+    this.ajouterArticle = function(code, qte, prix)
+    { 
+        var index = this.getArticle(code);
+        if (index == -1) this.liste.push(new LignePanier(code, qte, prix));
+        else this.liste[index].ajouterQte(qte);
+    }
+    this.getPrixPanier = function()
+    {
+        var total = 0;
+        for(var i = 0 ; i < this.liste.length ; i++)
+            total += this.liste[i].getPrixLigne();
+        return total;
+    }
+    this.getArticle = function(id)
+    {
+        for(var i = 0 ; i <this.liste.length ; i++)
+            if (code == this.liste[i].getCode()) return i;
+        return -1;
+    }
+    this.supprimerArticle = function(code)
+    {
+        var index = this.getArticle(code);
+        if (index > -1) this.liste.splice(index, 1);
+    }
+}
+Panier();

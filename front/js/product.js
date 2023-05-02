@@ -1,3 +1,4 @@
+
 // Récupérer la valeur de l'ID du produit à partir des paramètres de l'URL
 let url = window.location.href;
 let productId = url.split(`?`)[1];
@@ -45,6 +46,7 @@ fetch(`http://localhost:3000/api/products/` + productId)
         alert("Veuillez entrer une quantité valide.");
         return;
       }
+    
 
       // Ajouter la quantité et le produit au panier
       let productToAddToCart = {
@@ -58,10 +60,30 @@ fetch(`http://localhost:3000/api/products/` + productId)
 
       };
 
-      cart.push(productToAddToCart)
-      console.log(cart)
-      localStorage.setItem('cart', JSON.stringify(cart));
-      console.log(productToAddToCart);
+     // Vérifier si le produit est déjà présent dans le panier
+      let existingProductIndex = cart.findIndex((item) => {
+        return item.product._id === product._id && item.color === productColors;
+      });
 
+      // Si le produit est déjà présent dans le panier, mettre à jour la quantité
+      if (existingProductIndex !== -1) {
+        cart[existingProductIndex].quantity += quantity;
+      } 
+      // Sinon, ajouter un nouvel article au panier
+      else {
+        let productToAddToCart = {
+          product: product,
+          quantity: quantity,
+          color: productColors,
+          img: product.imageUrl,
+          price: product.price,
+          id: product._id
+        };
+        cart.push(productToAddToCart);
+      }
+
+      // Mettre à jour le panier dans localStorage
+      localStorage.setItem('cart', JSON.stringify(cart));
+      console.log(cart);
     });
   });
