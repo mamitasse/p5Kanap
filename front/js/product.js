@@ -48,17 +48,7 @@ fetch(`http://localhost:3000/api/products/` + productId)
       }
     
 
-      // Ajouter la quantité et le produit au panier
-      let productToAddToCart = {
    
-        product: product,
-        quantity: quantity,
-        color:productColors,
-        img:product.imageUrl,
-        price:product.price,
-        id:product._id
-
-      };
 
      // Vérifier si le produit est déjà présent dans le panier
       let existingProductIndex = cart.findIndex((item) => {

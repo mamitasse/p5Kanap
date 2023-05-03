@@ -65,9 +65,11 @@ const createArticle = () => {
         </div>
         </article>
       `;
+      
       section.appendChild(article);
       sumPrices += element.product.price * element.quantity;
       sumQuantity += element.quantity;
+      
     });
   }
   price.innerText = sumPrices.toFixed(2);
@@ -125,8 +127,45 @@ const createArticle = () => {
       /* On met à jour l'affichage de la somme totale du prix */
       price.innerText = sumPrices.toFixed(2);
       quantity.innerText = sumQuantity;
+
+      
     });
+    
   }
+  
 };
 
 createArticle(); // Appel de la fonction pour afficher les articles du panier
+
+// Récupérer les données du panier depuis le localStorage
+let cart = JSON.parse(localStorage.getItem("cart"));
+
+// Fonction pour supprimer un article du panier
+function deleteArticle(productId, color) {
+  // Trouver l'article correspondant
+  let index = cart.findIndex((article) => article.id === productId && article.color === color);
+
+  // Supprimer l'article s'il est trouvé
+  if (index !== -1) {
+    cart.splice(index, 1);
+  }
+
+  // Mettre à jour le panier dans le localStorage
+  localStorage.setItem("cart", JSON.stringify(cart));
+
+  // Mettre à jour l'affichage du panier
+  createArticle();
+}
+
+// Ajouter un gestionnaire d'événements pour le bouton "Supprimer"
+const deleteButtons = document.getElementsByClassName("deleteItem");
+for (let i = 0; i < deleteButtons.length; i++) {
+  deleteButtons[i].addEventListener("click", function () {
+    let article = this.closest("article");
+    let productId = article.getAttribute("data-id");
+    let color = article.getAttribute("data-color");
+
+    // Appeler la fonction de suppression avec les bons arguments
+    deleteArticle(productId, color);
+  });
+}
