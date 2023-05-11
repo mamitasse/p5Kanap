@@ -38,7 +38,7 @@ const createArticle = () => {
   if (localStorageProduct.length == 0) {
     section.innerText = "Votre panier est vide";
   } else {
-    localStorageProduct.forEach((element) => {
+    localStorageProduct.forEach(element => {
       let article = document.createElement("article");
       article.classList.add("cart__item");
       article.setAttribute("data-id", element.product._id);
@@ -64,9 +64,11 @@ const createArticle = () => {
         </div>
         </article>
       `;
+
       section.appendChild(article);
       sumPrices += element.product.price * element.quantity;
       sumQuantity += element.quantity;
+
     });
   }
   price.innerText = sumPrices.toFixed(2);
@@ -80,10 +82,13 @@ const createArticle = () => {
 
   /* On parcourt le tableau quantityInputs avec une boucle */
   for (let i = 0; i < quantityInputs.length; i++) {
+
     /*Pour chaque élément parcouru, on lui ajoute un event listener "change",
     ainsi, lorsque la quantité d'un input est changée, cela sera directement détecté
     et l'event listener s'activera */
     quantityInputs[i].addEventListener("change", function (e) {
+
+
       /* ON définit des variables pour mettre à jour le prix et la quantité globale, après la maj du cart */
       let sumPrices = 0;
       let sumQuantity = 0;
@@ -91,22 +96,24 @@ const createArticle = () => {
       /* On récupère le panier avec la fonction getCart() que l'on a créé plus haut, à la ligne 5
       Nous le récupérons car nous avons besoin de mettre à jour le localStorage */
       let cart = getCart();
-      console.log("change", e.target.value, cart);
+      console.log('change', e.target.value, cart)
 
       /* On récupère ensuite l'id de l'élément cliqué au moment où l'utilisateur a changé la quantité */
-      let dataId = this.closest("article").getAttribute("data-id");
+      let dataId = this.closest("article").getAttribute("data-id")
 
       /* On récupère pour finir la couleur de l'élément cliqué au moment où l'utilisateur a changé la quantité*/
-      let dataColor = this.closest("article").getAttribute("data-color");
+      let dataColor = this.closest("article").getAttribute("data-color")
 
       /* Cette fois, nous devons parcourir le panier pour pouvoir le mettre à jour, c'est pour cela que nous 
       créons une deuxième boucle avec l'index j, et non pas i, pour ne pas mélanger les indexs deux boucles */
       for (let j = 0; j < cart.length; j++) {
+
         /* ici, j'ajoute une condition, je vérifie que l'id de l'élément contenu dans le panier correspond bien à l'id de l'élément
         cliqué, et je fais la meme vérification pour la couleur */
         if (cart[j].id === dataId && cart[j].color === dataColor) {
+
           /* si la condition ci dessus est remplie, alors je met à jour la quantité de l'élément concerné dans le panier */
-          cart[j].quantity = parseInt(e.target.value);
+          cart[j].quantity = parseInt(e.target.value)
         }
 
         /* Ici, nous devons maintenant calculer la nouvelle somme totale de la page */
@@ -114,31 +121,58 @@ const createArticle = () => {
         sumQuantity += cart[j].quantity;
       }
       /* Pour finir, maintenant que le panier a été mis à jour, je le met à jour aussi dans le local storage */
-      localStorage.setItem("cart", JSON.stringify(cart));
+      localStorage.setItem("cart", JSON.stringify(cart))
 
       /* On met à jour l'affichage de la somme totale du prix */
       price.innerText = sumPrices.toFixed(2);
       quantity.innerText = sumQuantity;
+
+
     });
+
   }
-  const deleteButtons = document.getElementsByClassName("deleteItem");
-  for (let i = 0; i < deleteButtons.length; i++) {
-    deleteButtons[i].addEventListener("click", function () {
-      function removeArticleFromLocalStorage(id, color) {
-        let cart = JSON.parse(localStorage.getItem("cart"));
-        if (!cart) {
-          return;
-        }
-        let updatedCart = cart.filter((item) => {
-          return !(item.id === id && item.color === color);
-        });
-        localStorage.setItem("cart", JSON.stringify(updatedCart));
-      }
-    });
-  }
+
 };
 
 createArticle(); // Appel de la fonction pour afficher les articles du panier
+
+// Récupérer les données du panier depuis le localStorage
+let cart = JSON.parse(localStorage.getItem("cart"));
+
+// Fonction pour supprimer un article du panier
+function deleteArticle(productId, color) {
+  // Trouver l'article correspondant
+  let index = cart.findIndex((article) => article.id === productId && article.color === color);
+
+  // Supprimer l'article s'il est trouvé
+  if (index !== -1) {
+    cart.splice(index, 1);
+  }
+
+  // Mettre à jour le panier dans le localStorage
+  localStorage.setItem("cart", JSON.stringify(cart));
+
+  // Mettre à jour l'affichage du panier
+  createArticle();
+  deleteEvent()
+}
+
+// Ajouter un gestionnaire d'événements pour le bouton "Supprimer"
+function deleteEvent() {
+  const deleteButtons = document.getElementsByClassName("deleteItem");
+  for (let i = 0; i < deleteButtons.length; i++) {
+    deleteButtons[i].addEventListener("click", function () {
+      let article = this.closest("article");
+      let productId = article.getAttribute("data-id");
+      let color = article.getAttribute("data-color");
+
+      // Appeler la fonction de suppression avec les bons arguments
+      deleteArticle(productId, color);
+    });
+  }
+}
+//appeler la fonction deleteEvent lorsque nous arrivons sur la page
+deleteEvent()
 
 /// Message envoyé si l’entrée est vide lors de l’envoi du formulaire
 function inputEmpty(errorMsg, input) {
