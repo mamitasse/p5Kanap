@@ -311,10 +311,15 @@ document.querySelector("#order").addEventListener("click", (e) => {
     inputValidation.lastName &&
     inputValidation.address &&
     inputValidation.city &&
-    inputValidation.email
+    inputValidation.email &&
+    getCart().length > 0
+  
   ) {
     sendForm(formValue);
     console.log(formValue);
+  }
+  else {
+    alert("Votre panier est vide !");
   }
 });
 
