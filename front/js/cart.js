@@ -300,7 +300,7 @@ document.querySelector("#order").addEventListener("click", (e) => {
     inputNotValid(
       document.querySelector("#email"),
       document.querySelector("#emailErrorMsg"),
-      errorMessage[0].email
+      errorMessage.email
     );
   } else {
     inputValidation.email = true;
@@ -311,15 +311,13 @@ document.querySelector("#order").addEventListener("click", (e) => {
     inputValidation.lastName &&
     inputValidation.address &&
     inputValidation.city &&
-    inputValidation.email &&
-    getCart().length> 0
-  
+    inputValidation.email 
   ) {
-    sendForm(formValue);
-    
-  }
-   else if(getCart().length === 0) {
-   alert("Merci d'ajouter au moins un article");
+    if(getCart().length> 0){
+      sendForm(formValue);
+    }else{
+      alert("Merci d'ajouter au moins un article");
+    }
   }
 });
 
