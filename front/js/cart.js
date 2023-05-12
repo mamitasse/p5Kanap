@@ -312,14 +312,14 @@ document.querySelector("#order").addEventListener("click", (e) => {
     inputValidation.address &&
     inputValidation.city &&
     inputValidation.email &&
-    getCart().length > 0
+    getCart().length> 0
   
   ) {
     sendForm(formValue);
-    console.log(formValue);
+    
   }
-  else {
-    alert("Votre panier est vide !");
+   else if(getCart().length === 0) {
+   alert("Merci d'ajouter au moins un article");
   }
 });
 
