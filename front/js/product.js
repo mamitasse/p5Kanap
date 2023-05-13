@@ -70,6 +70,7 @@ fetch(`http://localhost:3000/api/products/` + productId)
           id: product._id
         };
         cart.push(productToAddToCart);
+        alert('vous avez ajouté cet article dans votre panier');
       }
 
       // Mettre à jour le panier dans localStorage
